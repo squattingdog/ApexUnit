@@ -1,5 +1,6 @@
 /* 
- * salesforce.com, inc.
+ * Copyright (c) 2015, Salesforce.com, Inc.
+ * All rights reserved.
  *
  * Legal Text is available at https://github.com/forcedotcom/Legal/blob/master/License.txt 
 
