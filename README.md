@@ -19,16 +19,6 @@ Please refer https://github.com/forcedotcom/ApexUnit/wiki to learn more about th
   - Download link : https://maven.apache.org/download.cgi 
   - Installation instructions : https://maven.apache.org/install.html
   - Configuring maven : https://maven.apache.org/configure.html
-- OAuth setup for the org to retrieve the Client ID and Client Secret using a Connected App
-  - http://salesforce.stackexchange.com/questions/40346/where-do-i-find-the-client-id-and-client-secret-of-an-existing-connected-app
-  - http://stackoverflow.com/questions/18464598/where-to-get-client-id-and-client-secret-of-salesforce-api-for-rails-3-2-11 
-  - http://www.calvinfroedge.com/salesforce-how-to-generate-api-credentials/
-  - Please verify the oauth setup for the org by executing the following command: 
-```shell
-curl -v <Salesforce_Org_URL>/services/oauth2/token -d "grant_type=password" -d "client_id=*CLIENT_ID_GOES_HERE*" -d "client_secret= *CLIENT_SECRET_GOES_HERE*" -d "username=*yourusername@yourdomain.com*" -d "password= *your_password_goes_here+*"
-```
-*The above command should provide you the access_token in a JSON formatted response. If you are running this command from an IP address that is outside of the trusted IP range specified by your connected app, you must append a [security token](https://help.salesforce.com/apex/HTViewHelpDoc?id=user_security_token.htm&language=en) to your password.
-+ If your password contains special characters, you must pass in a URL encoded version of your password. Note that this only needs to be done for the curl command and not the maven command
   
 ## How to build and execute ApexUnit
 - Clone the project onto your local system using the command:
