@@ -15,6 +15,8 @@
  
 package com.sforce.cd.apexUnit.arguments;
 
+import org.apache.commons.lang.BooleanUtils;
+
 import com.beust.jcommander.Parameter;
 
 public class CommandLineArguments {
@@ -69,7 +71,7 @@ public class CommandLineArguments {
 	@Parameter(names = HELP, help = true, description = "Displays options available for running this application")
 	static private boolean help;
 	@Parameter(names = SANDBOX, description = "Default is false.  Used to determine login endpoint for authentication.", required = false)
-	static private boolean sandbox = false;
+	static private String sandbox = "";
 
 	/*
 	 * Static getter methods for each of the CLI parameter
@@ -124,7 +126,7 @@ public class CommandLineArguments {
 	}
 	
 	public static boolean isSandbox() {
-		return sandbox;
+		return BooleanUtils.toBoolean(sandbox);
 	}
 	
 	public static boolean isHelp() {
