@@ -46,35 +46,31 @@ This would create a local copy of the project for you.
 - Go to your project directory (the directory containing pom.xml) in your commandline and execute the following command:
 ```java
 mvn compile exec:java -Dexec.mainClass="com.sforce.cd.apexUnit.ApexUnitRunner"
--Dexec.args="-org.login.url $Salesforce_org_url 
-                     -org.username $username -org.password $password
-                     -org.client.id $client_id 
-                     -org.client.secret $client_secret
-                     -org.wide.code.coverage.threshold $Org_Wide_Code_Coverage_Percentage_Threshold 
-                     -team.code.coverage.threshold $team_Code_Coverage_Percentage_Threshold 
-                     -regex.for.selecting.source.classes.for.code.coverage.computation 
-                           $regex_For_Apex_Classes_To_Compute_Code_Coverage 
-                     -regex.for.selecting.test.classes.to.execute $regex_For_Apex_Test_Classes_To_Execute 
-                     -manifest.files.with.test.class.names.to.execute   
-                           $manifest_Files_For_Apex_Test_Classes_To_Execute 
-                     -manifest.files.with.source.class.names.for.code.coverage.computation 
-                           $manifest_Files_For_Apex_Source_Classes_to_compute_code_coverage
-                     -max.test.execution.time.threshold 
-                           $max_time_threshold_for_test_execution_to_abort"
-                     -proxy.host
-                           $prox_host
-                     -proxy.port
-                           $proxy_port
+-Dexec.args="-org.username $username 
+			 -org.password $password
+			 -sandbox $sandbox
+			 -org.wide.code.coverage.threshold $Org_Wide_Code_Coverage_Percentage_Threshold 
+			 -team.code.coverage.threshold $team_Code_Coverage_Percentage_Threshold 
+			 -regex.for.selecting.source.classes.for.code.coverage.computation 
+				   $regex_For_Apex_Classes_To_Compute_Code_Coverage 
+			 -regex.for.selecting.test.classes.to.execute $regex_For_Apex_Test_Classes_To_Execute 
+			 -manifest.files.with.test.class.names.to.execute   
+				   $manifest_Files_For_Apex_Test_Classes_To_Execute 
+			 -manifest.files.with.source.class.names.for.code.coverage.computation 
+				   $manifest_Files_For_Apex_Source_Classes_to_compute_code_coverage
+			 -max.test.execution.time.threshold 
+				   $max_time_threshold_for_test_execution_to_abort"
+			 -proxy.host
+				   $prox_host
+			 -proxy.port
+				   $proxy_port
 
 ``` 
 *Please replace all $xyz with the values specific to your environment/project*
 
 Required parameters: 
-- -org.login.url : Login URL for the org (for example, https://na14.salesforce.com)
 - -org.username : Username for the org
 - -org.password  : Password corresponding to the username for the org
-- -org.client.id : Client ID associated with the org. 
-- -org.client.secret : Client Secret associated with the org.
 
 Optional Parameters: 
 - -org.wide.code.coverage.threshold (default value: 75) : Org wide minimum code coverage required to meet the code coverage standards
@@ -86,13 +82,14 @@ Optional Parameters:
 - -max.test.execution.time.threshold : Maximum execution time(in minutes) for a test before it gets aborted
 - -proxy.host : Proxy host for external access
 - -proxy.port : Proxy port for external access
+- -sandbox : set to true to authenticate using test.salesforce.com, false if connecting to login.salesforce.com [default is false]
 - -help : Displays options available for running this application
 
 Note: You must provide either of the (-regex.for.selecting.source.classes.for.code.coverage.computation OR -manifest.files.with.source.class.names.for.code.coverage.computation) AND either of  -(regex.for.selecting.test.classes.to.execute OR -manifest.files.with.test.class.names.to.execute)
 
 Sample command: 
 ```java
-mvn compile exec:java -Dexec.mainClass="com.sforce.cd.apexUnit.ApexUnitRunner" -Dexec.args=" -org.login.url https://na14.salesforce.com -org.username yourusername@salesforce.com -org.password yourpassword-org.wide.code.coverage.threshold 75  -team.code.coverage.threshold 80 -org.client.id CLIENT_ID_FROM_CONNECTED_APP -org.client.secret CLIENT_SECRET_FROM_CONNECTED_APP -regex.for.selecting.test.classes.to.execute your_regular_exp1_for_test_classes,your_regular_exp2_for_test_classes -regex.for.selecting.source.classes.for.code.coverage.computation your_regular_exp1_for_source_classes,your_regular_exp2_for_source_classes -manifest.files.with.test.class.names.to.execute ManifestFile.txt -manifest.files.with.source.class.names.for.code.coverage.computation ClassManifestFile.txt -max.test.execution.time.threshold 10 -proxy.host your.proxy-if-required.net -proxy.port 8080"
+mvn compile exec:java -Dexec.mainClass="com.sforce.cd.apexUnit.ApexUnitRunner" -Dexec.args=" -org.username yourusername@salesforce.com -org.password yourpassword-org.wide.code.coverage.threshold 75  -team.code.coverage.threshold 80 -regex.for.selecting.test.classes.to.execute your_regular_exp1_for_test_classes,your_regular_exp2_for_test_classes -regex.for.selecting.source.classes.for.code.coverage.computation your_regular_exp1_for_source_classes,your_regular_exp2_for_source_classes -manifest.files.with.test.class.names.to.execute ManifestFile.txt -manifest.files.with.source.class.names.for.code.coverage.computation ClassManifestFile.txt -max.test.execution.time.threshold 10 -proxy.host your.proxy-if-required.net -proxy.port 8080"
 ```
 Note: Multiple comma separated manifest files and regexes can be provided. Please do not include spaces while providing multiple regex or manifest files.
 
