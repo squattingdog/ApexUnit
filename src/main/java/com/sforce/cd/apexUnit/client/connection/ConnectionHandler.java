@@ -41,6 +41,7 @@ public class ConnectionHandler {
 	private String MAX_TIME_OUT_IN_MS = System.getProperty("MAX_TIME_OUT_IN_MS");
 
 	private String sessionIdFromConnectorConfig = null;
+	private String serviceEndpoint = null;
 	PartnerConnection connection = null;
 	BulkConnection bulkConnection = null;
 	/*
@@ -98,8 +99,8 @@ public class ConnectionHandler {
 			
 	private PartnerConnection createConnection() {
 		if (connection == null) {
-			PartnerConnectionConnectorConfig pcConnectorConfig = new PartnerConnectionConnectorConfig();
-			ConnectorConfig config = pcConnectorConfig.createConfig();
+			//PartnerConnectionConnectorConfig pcConnectorConfig = new PartnerConnectionConnectorConfig();
+			ConnectorConfig config = PartnerConnectionConnectorConfig.instance().createConfig(); //pcConnectorConfig.createConfig();
 			
 			LOG.debug("creating connection for : " + CommandLineArguments.getUsername() + " "
 					+ CommandLineArguments.getOrgUrl() + " "
@@ -107,6 +108,7 @@ public class ConnectionHandler {
 			try {
 				connection = Connector.newConnection(config);
 				setSessionIdFromConnectorConfig(config);
+				setServiceEndpointFromConnectorConfig(config);
 				LOG.debug("Partner Connection established with the org!! \n SESSION  ID IN createPartnerConn: "
 						+ sessionIdFromConnectorConfig);
 			} catch (ConnectionException connEx) {
@@ -140,6 +142,15 @@ public class ConnectionHandler {
 	 */
 	public void setSessionIdFromConnectorConfig(ConnectorConfig config) {
 		sessionIdFromConnectorConfig = config.getSessionId();
+	}
+	
+	private void setServiceEndpointFromConnectorConfig(ConnectorConfig config) {
+		String[] urlParts = config.getServiceEndpoint().split("/");
+		serviceEndpoint = urlParts[0] + "//" + urlParts[2];
+	}
+	
+	public String getServiceEndpoint(){
+		return serviceEndpoint;
 	}
 
 	// BulkConnection instance is the base for using the Bulk API.

@@ -6,7 +6,7 @@
  */
 package com.sforce.cd.apexUnit.client.connection;
 
-import com.sforce.cd.apexUnit.arguments.CommandLineArguments;
+
 import com.sforce.ws.ConnectorConfig;
 
 public class BulkConnectionConnectorConfig implements ConnectorConfigInterface {
@@ -16,11 +16,10 @@ public class BulkConnectionConnectorConfig implements ConnectorConfigInterface {
 		// executed and, if successful,
 		// a valid session is stored in the ConnectorConfig instance.
 		// Use this key to initialize a BulkConnection:
-		CommonConnectorConfig commonConnConfig = new CommonConnectorConfig();
-		ConnectorConfig config = commonConnConfig.createConfig();
+		ConnectorConfig config = CommonConnectorConfig.instance().createConfig();
 		String sessionId = ConnectionHandler.getConnectionHandlerInstance().getSessionIdFromConnectorConfig();
 		config.setSessionId(sessionId);
-		String restEndPoint = CommandLineArguments.getOrgUrl() + "/services/async/"
+		String restEndPoint = ConnectionHandler.getConnectionHandlerInstance().getServiceEndpoint() + "/services/async/"
 				+ ConnectionHandler.SUPPORTED_VERSION;
 		config.setRestEndpoint(restEndPoint);
 		config.setTraceMessage(false);

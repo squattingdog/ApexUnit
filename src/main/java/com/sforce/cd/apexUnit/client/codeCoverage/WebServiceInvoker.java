@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,6 +39,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sforce.cd.apexUnit.ApexUnitUtils;
 import com.sforce.cd.apexUnit.arguments.CommandLineArguments;
+import com.sforce.cd.apexUnit.client.connection.ConnectionHandler;
 
 import static java.net.URLEncoder.encode;
 
@@ -99,9 +99,10 @@ public class WebServiceInvoker {
 	public String generateRequestString() {
 		String requestString = "";
 		try {
-			requestString = "grant_type=password&client_id=" + CommandLineArguments.getClientId() + "&client_secret="
-					+ CommandLineArguments.getClientSecret() + "&username=" + CommandLineArguments.getUsername()
-					+ "&password=" + encode(CommandLineArguments.getPassword(), "UTF-8");
+			//requestString = "grant_type=password&client_id=" + CommandLineArguments.getClientId() + "&client_secret="
+			//		+ CommandLineArguments.getClientSecret() + "&username=" + CommandLineArguments.getUsername()
+			//		+ "&password=" + encode(CommandLineArguments.getPassword(), "UTF-8");
+			encode(CommandLineArguments.getPassword(), "UTF-8");
 		} catch (UnsupportedEncodingException ex) {
 			ApexUnitUtils.shutDownWithDebugLog(ex, "Exception during request string generation: " + ex);
 			if(LOG.isDebugEnabled()) {
@@ -143,7 +144,7 @@ public class WebServiceInvoker {
 		HttpClient httpclient = new HttpClient();
 		GetMethod get = null;
 
-		String authorizationServerURL = CommandLineArguments.getOrgUrl() + relativeServiceURL;
+		String authorizationServerURL = ConnectionHandler.getConnectionHandlerInstance().getServiceEndpoint() + relativeServiceURL;
 		get = new GetMethod(authorizationServerURL);
 		get.addRequestHeader("Content-Type", "application/json");
 		get.setRequestHeader("Authorization", "Bearer " + accessToken);
@@ -242,11 +243,6 @@ public class WebServiceInvoker {
 		
 		InputStream instream = null;
 		try {
-			// don't delete the below line --i.e. getting response body as
-			// string. Getting response as stream fails upon deleting the below
-			// line! strange!
-			String respStr;
-			respStr = get.getResponseBodyAsString();
 			instream = get.getResponseBodyAsStream();
 		} catch (IOException e) {
 

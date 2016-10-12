@@ -21,7 +21,6 @@ public class CommandLineArguments {
 	/*
 	 * Static variables that define the command line options
 	 */
-	public static final String ORG_LOGIN_URL = "-org.login.url";
 	public static final String ORG_USERNAME = "-org.username";
 	public static final String ORG_PASSWORD = "-org.password";
 	public static final String MANIFEST_FILES_WITH_TEST_CLASS_NAMES_TO_EXECUTE = "-manifest.files.with.test.class.names.to.execute";
@@ -34,15 +33,14 @@ public class CommandLineArguments {
 	public static final String ORG_CLIENT_ID = "-org.client.id";
 	public static final String ORG_CLIENT_SECRET = "-org.client.secret";
 	public static final String PROXY_HOST = "-proxy.host";
-	public static final String PROXY_PORT = "-proxy.port";
+	public static final String PROXY_PORT = "-proxy.port";	
+	public static final String SANDBOX = "-sandbox";
 	
 	public static final String HELP = "-help";
 
 	/*
 	 * Define Parameters using JCommander framework
 	 */
-	@Parameter(names = ORG_LOGIN_URL, description = "Login URL for the org", required = true, validateWith = URLValidator.class)
-	static private String orgUrl = System.getProperty("SERVER_URL_PARAMETER");
 	@Parameter(names = ORG_USERNAME, description = "Username for the org", required = true)
 	static private String username = System.getProperty("SERVER_USERNAME_PARAMETER");
 	@Parameter(names = ORG_PASSWORD, description = "Password corresponding to the username for the org", required = true)
@@ -64,24 +62,23 @@ public class CommandLineArguments {
 	static private Integer teamCodeCoverageThreshold = 75;
 	@Parameter(names = MAX_TEST_EXECUTION_TIME_THRESHOLD, description = "Maximum execution time(in minutes) for a test before it gets aborted", validateWith = PositiveIntegerValidator.class, variableArity = true)
 	static private Integer maxTestExecTimeThreshold;
-	@Parameter(names = ORG_CLIENT_ID, description = "Client ID associated with the org. "
-			+ "Steps to confirgure/retrieve client ID/Secret: "
-			+ "https://www.salesforce.com/us/developer/docs/api_rest/Content/quickstart_oauth.htm", required = true)
-	static private String clientId;
-	@Parameter(names = ORG_CLIENT_SECRET, description = "Client Secret associated with the org.", required = true)
-	static private String clientSecret;
 	@Parameter(names = PROXY_HOST, description = "Proxy host if required for access.", required = false)
 	static private String proxyHost;
 	@Parameter(names = PROXY_PORT, description = "Proxy port if required for access.", validateWith = PositiveIntegerValidator.class, required = false)
 	static private Integer proxyPort;
 	@Parameter(names = HELP, help = true, description = "Displays options available for running this application")
 	static private boolean help;
+	@Parameter(names = SANDBOX, description = "Default is false.  Used to determine login endpoint for authentication.", required = false)
+	static private boolean sandbox = false;
 
 	/*
 	 * Static getter methods for each of the CLI parameter
 	 */
 	public static String getOrgUrl() {
-		return orgUrl;
+		if(isSandbox())
+			return "https://test.salesforce.com";
+		else
+			return "https://login.salesforce.com";
 	}
 
 	public static String getUsername() {
@@ -117,19 +114,7 @@ public class CommandLineArguments {
 	public static Integer getMaxTestExecTimeThreshold() {
 		return maxTestExecTimeThreshold;
 	}
-
-	public static String getClientId() {
-		return clientId;
-	}
-
-	public static void setClientId(String clientId) {
-		CommandLineArguments.clientId = clientId;
-	}
-
-	public static String getClientSecret() {
-		return clientSecret;
-	}
-
+	
 	public static String getProxyHost() {
 		return proxyHost;
 	}
@@ -137,11 +122,11 @@ public class CommandLineArguments {
 	public static Integer getProxyPort() {
 		return proxyPort;
 	}
-
-	public static void setClientSecret(String clientSecret) {
-		CommandLineArguments.clientSecret = clientSecret;
+	
+	public static boolean isSandbox() {
+		return sandbox;
 	}
-
+	
 	public static boolean isHelp() {
 		return help;
 	}

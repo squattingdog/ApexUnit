@@ -13,17 +13,29 @@ import org.slf4j.LoggerFactory;
 
 public class PartnerConnectionConnectorConfig implements ConnectorConfigInterface {
 	private static Logger LOG = LoggerFactory.getLogger(PartnerConnectionConnectorConfig.class);
-
+	private static PartnerConnectionConnectorConfig pcConnectorConfig = null;
+	private ConnectorConfig connectorConfig = null;
+	
+	public static PartnerConnectionConnectorConfig instance() {
+		if(pcConnectorConfig == null)
+			pcConnectorConfig = new PartnerConnectionConnectorConfig();
+		return pcConnectorConfig;
+	}
+	
 	public ConnectorConfig createConfig() {
-		CommonConnectorConfig commonConnConfig = new CommonConnectorConfig();
-		ConnectorConfig config = commonConnConfig.createConfig();
-		config.setAuthEndpoint(
-				CommandLineArguments.getOrgUrl() + "/services/Soap/u/" + ConnectionHandler.SUPPORTED_VERSION);
-		config.setSessionRenewer(new SFDCSessionRenewer());
-		LOG.info("Default connection time out value is: " + config.getConnectionTimeout());
-		config.setConnectionTimeout(ConnectionHandler.MAX_TIME_OUT_IN_MS_INT);
-		LOG.info("Updated connection time out value(from config.properties file): " + config.getConnectionTimeout());
-		return config;
+		if(connectorConfig == null) {
+			ConnectorConfig config = CommonConnectorConfig.instance().createConfig();
+			config.setAuthEndpoint(
+					CommandLineArguments.getOrgUrl() + "/services/Soap/u/" + ConnectionHandler.SUPPORTED_VERSION);
+			config.setSessionRenewer(new SFDCSessionRenewer());
+			LOG.info("Default connection time out value is: " + config.getConnectionTimeout());
+			config.setConnectionTimeout(ConnectionHandler.MAX_TIME_OUT_IN_MS_INT);
+			LOG.info("Updated connection time out value(from config.properties file): " + config.getConnectionTimeout());
+			
+			connectorConfig = config;
+		}
+		
+		return connectorConfig;
 	}
 
 }

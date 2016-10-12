@@ -21,7 +21,8 @@ public class CommandLineArgumentsTest {
 	// initialize test parameter values.
 	// Change the below values to execute various positive/negative test cases
 
-	private final String SERVER_ORG_LOGIN_URL_PARAMETER = System.getProperty(CommandLineArguments.ORG_LOGIN_URL);
+	//private final String SERVER_ORG_LOGIN_URL_PARAMETER = System.getProperty(CommandLineArguments.ORG_LOGIN_URL);
+	private final String SERVER_ORG_LOGIN_URL_PARAMETER = CommandLineArguments.getOrgUrl();
 	private final String ORG_USERNAME_PARAMETER = System.getProperty(CommandLineArguments.ORG_USERNAME);
 	private final String ORG_PASSWORD_PARAMETER = System.getProperty(CommandLineArguments.ORG_PASSWORD);
 	private final String CLIENT_ID = System.getProperty(CommandLineArguments.ORG_CLIENT_ID);
@@ -45,8 +46,8 @@ public class CommandLineArgumentsTest {
 	public void setup() {
 		StringBuffer arguments = new StringBuffer();
 
-		arguments.append(CommandLineArguments.ORG_LOGIN_URL);
-		arguments.append(appendSpaces(SERVER_ORG_LOGIN_URL_PARAMETER));
+		arguments.append(CommandLineArguments.SANDBOX);
+		arguments.append(appendSpaces("false"));
 		arguments.append(CommandLineArguments.ORG_USERNAME);
 		arguments.append(appendSpaces(ORG_USERNAME_PARAMETER));
 		arguments.append(CommandLineArguments.ORG_PASSWORD);
@@ -65,10 +66,12 @@ public class CommandLineArgumentsTest {
 		arguments.append(appendSpaces(CLASS_PREFIX_PARAMETER));
 		arguments.append(CommandLineArguments.MAX_TEST_EXECUTION_TIME_THRESHOLD);
 		arguments.append(appendSpaces(MAX_TEST_EXEC_TIME_THRESHOLD));
+		/*
 		arguments.append(CommandLineArguments.ORG_CLIENT_ID);
 		arguments.append(appendSpaces(CLIENT_ID));
 		arguments.append(CommandLineArguments.ORG_CLIENT_SECRET);
 		arguments.append(appendSpaces(CLIENT_SECRET));
+		*/
 		String[] args = arguments.toString().split(" ");
 
 		JCommander jcommander = new JCommander(cmdLineArgs, args);
@@ -121,6 +124,7 @@ public class CommandLineArgumentsTest {
 		Assert.assertEquals(CommandLineArguments.getSourceRegex(), CLASS_PREFIX_PARAMETER);
 	}
 
+	/*
 	@Test
 	public void getClientId() {
 		Assert.assertEquals(CommandLineArguments.getClientId(), CLIENT_ID);
@@ -130,6 +134,7 @@ public class CommandLineArgumentsTest {
 	public void getClientSecret() {
 		Assert.assertEquals(CommandLineArguments.getClientSecret(), CLIENT_SECRET);
 	}
+	*/
 
 	private String appendSpaces(String input) {
 		if (input != null && !input.isEmpty()) {

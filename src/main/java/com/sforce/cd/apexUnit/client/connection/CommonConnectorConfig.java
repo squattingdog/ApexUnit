@@ -13,18 +13,30 @@ import org.slf4j.LoggerFactory;
 
 public class CommonConnectorConfig implements ConnectorConfigInterface {
 	private static Logger LOG = LoggerFactory.getLogger(CommonConnectorConfig.class);
-
-	public ConnectorConfig createConfig() {
-		ConnectorConfig config = new ConnectorConfig();
-		config.setUsername(CommandLineArguments.getUsername());
-		config.setPassword(CommandLineArguments.getPassword());
-		config.setCompression(true);
-		if (CommandLineArguments.getProxyHost() != null && CommandLineArguments.getProxyPort() != null) {
-			LOG.debug("Setting proxy configuraiton to " + CommandLineArguments.getProxyHost() + " on port "
-					+ CommandLineArguments.getProxyPort());
-			config.setProxy(CommandLineArguments.getProxyHost(), CommandLineArguments.getProxyPort());
-		}
-		return config;
+	
+	private static CommonConnectorConfig commonConnectorConfig = null;
+	private static ConnectorConfig connectorConfig = null;
+	
+	public static CommonConnectorConfig instance() {
+		if(commonConnectorConfig == null)
+			commonConnectorConfig = new CommonConnectorConfig();
+		return commonConnectorConfig;
 	}
-
+	
+	
+	public ConnectorConfig createConfig() {
+		if(connectorConfig == null) {
+			ConnectorConfig config = new ConnectorConfig();
+			config.setUsername(CommandLineArguments.getUsername());
+			config.setPassword(CommandLineArguments.getPassword());
+			config.setCompression(true);
+			if (CommandLineArguments.getProxyHost() != null && CommandLineArguments.getProxyPort() != null) {
+				LOG.debug("Setting proxy configuraiton to " + CommandLineArguments.getProxyHost() + " on port "
+						+ CommandLineArguments.getProxyPort());
+				config.setProxy(CommandLineArguments.getProxyHost(), CommandLineArguments.getProxyPort());
+			}
+			connectorConfig = config;
+		}
+		return connectorConfig;
+	}
 }
