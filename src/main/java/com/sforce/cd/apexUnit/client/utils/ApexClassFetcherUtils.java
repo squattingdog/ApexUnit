@@ -14,6 +14,7 @@
 
 package com.sforce.cd.apexUnit.client.utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -75,10 +76,18 @@ public class ApexClassFetcherUtils {
 		} else {
 			consolidatedTestClassesAsArray = testClassesAsArray;
 		}
+		
+		//use specified manifest files if regex did not return any results.
+		if(consolidatedTestClassesAsArray == null || consolidatedTestClassesAsArray.length == 0){
+			consolidatedTestClassesAsArray = testClassesAsArray;
+		}
+		
 		// if null, no apex test classes fetched to execute; throw warning
 		if (consolidatedTestClassesAsArray == null || consolidatedTestClassesAsArray.length == 0) {
 			ApexUnitUtils.shutDownWithErrMsg("No/Invalid test classes mentioned in manifest file and/or "
-					+ "regex pattern for ApexTestPrefix didn't return any test class names from the org");
+					+ "regex pattern for ApexTestPrefix didn't return any test class names from the org"
+					+ ".  manifestfile: " + CommandLineArguments.getTestManifestFiles()
+					+ ".  regex: " + CommandLineArguments.getTestRegex());
 		} else {
 			LOG.debug("List of all the Fetched Apex test classes to execute:");
 			if (LOG.isDebugEnabled()) {
@@ -100,6 +109,7 @@ public class ApexClassFetcherUtils {
 	 */
 	public static String[] fetchApexClassesFromManifestFiles(String manifestFiles, boolean includeTriggers) {
 		String[] classIdsAsArray = null;
+		try{
 		if (manifestFiles != null) {
 			ApexManifestFileReader apexManifestFileReader = new ApexManifestFileReader(includeTriggers);
 			// fetch test class id's based on the test classes mentioned in the
@@ -114,6 +124,9 @@ public class ApexClassFetcherUtils {
 					logTheFetchedApexClasses(classIdsAsArray);
 				}
 			}
+		}
+		}catch(IOException ex) {
+			ApexUnitUtils.shutDownWithDebugLog(ex, "IOException while trying to read the manifest file in fetchClassNamesFromManifestFiles.");
 		}
 		return classIdsAsArray;
 	}

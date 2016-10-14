@@ -16,6 +16,8 @@ package com.sforce.cd.apexUnit.client.fileReader;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,30 +46,24 @@ public class ApexManifestFileReader {
 		this.includeTriggers = includeTriggers;
 	}
 
-	public String[] fetchClassNamesFromManifestFiles(String files) {
+	public String[] fetchClassNamesFromManifestFiles(String files) throws IOException{
 		String[] apexClassesStrArr = null;
 		String[] apexClassesStrArrForManifest = null;
 		LOG.info("Reading from Manifest files: " + files);
 		String[] manifestFiles = files.split(",");
 
-		for (String file : manifestFiles) {
-			LOG.info("Reading Manifest file from location : " + file);
-			InputStream inStr;
-			try {
-				inStr = this.getClass().getClassLoader().getResourceAsStream(file);
-				if (inStr != null) {
-					apexClassesStrArrForManifest = readInputStreamAndConstructClassArray(inStr);
-				} else {
-					ApexUnitUtils.shutDownWithErrMsg(
-							"Unable to find the file " + file + " in the src->main->resources folder");
-				}
+		for (String fileEntry : manifestFiles) {
+			LOG.info("Reading Manifest file from location : " + fileEntry);
+			try (FileInputStream fStream = new FileInputStream(fileEntry)) {
+				apexClassesStrArrForManifest = readInputStreamAndConstructClassArray(fStream);
 			} catch (IOException e) {
-				ApexUnitUtils.shutDownWithDebugLog(e, "IOException while trying to read the manifest file " + file);
+				ApexUnitUtils.shutDownWithDebugLog(e, "IOException while trying to read the manifest file " + fileEntry);
 			}
+			
 			if (apexClassesStrArrForManifest != null) {
 				apexClassesStrArr = (String[]) ArrayUtils.addAll(apexClassesStrArr, apexClassesStrArrForManifest);
 			} else {
-				LOG.warn("Given manifest file " + file
+				LOG.warn("Given manifest file " + fileEntry
 						+ " contains invalid/no test classes. 0 Apex test class id's returned");
 			}
 		}
