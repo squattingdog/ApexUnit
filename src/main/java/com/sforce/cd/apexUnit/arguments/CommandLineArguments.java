@@ -25,15 +25,13 @@ public class CommandLineArguments {
 	 */
 	public static final String ORG_USERNAME = "-org.username";
 	public static final String ORG_PASSWORD = "-org.password";
-	public static final String MANIFEST_FILES_WITH_TEST_CLASS_NAMES_TO_EXECUTE = "-manifest.files.with.test.class.names.to.execute";
-	public static final String MANIFEST_FILES_WITH_SOURCE_CLASS_NAMES_FOR_CODE_COVERAGE_COMPUTATION = "-manifest.files.with.source.class.names.for.code.coverage.computation";
-	public static final String REGEX_FOR_SELECTING_TEST_CLASSES_TO_EXECUTE = "-regex.for.selecting.test.classes.to.execute";
-	public static final String REGEX_FOR_SELECTING_SOURCE_CLASSES_FOR_CODE_COVERAGE_COMPUTATION = "-regex.for.selecting.source.classes.for.code.coverage.computation";
-	public static final String ORG_WIDE_CODE_COVERAGE_THRESHOLD = "-org.wide.code.coverage.threshold";
-	public static final String TEAM_CODE_COVERAGE_THRESHOLD = "-team.code.coverage.threshold";
-	public static final String MAX_TEST_EXECUTION_TIME_THRESHOLD = "-max.test.execution.time.threshold";
-	public static final String ORG_CLIENT_ID = "-org.client.id";
-	public static final String ORG_CLIENT_SECRET = "-org.client.secret";
+	public static final String MANIFEST_FILES_WITH_TEST_CLASS_NAMES_TO_EXECUTE = "-manifest.tests";
+	public static final String MANIFEST_FILES_WITH_SOURCE_CLASS_NAMES_FOR_CODE_COVERAGE_COMPUTATION = "-manifest.classes";
+	public static final String REGEX_FOR_SELECTING_TEST_CLASSES_TO_EXECUTE = "-regex.tests";
+	public static final String REGEX_FOR_SELECTING_SOURCE_CLASSES_FOR_CODE_COVERAGE_COMPUTATION = "-regex.classes";
+	public static final String ORG_WIDE_CODE_COVERAGE_THRESHOLD = "-threshold.org";
+	public static final String TEAM_CODE_COVERAGE_THRESHOLD = "-threshold.team";
+	public static final String MAX_TEST_EXECUTION_TIME_THRESHOLD = "-threshold.maxtime";
 	public static final String PROXY_HOST = "-proxy.host";
 	public static final String PROXY_PORT = "-proxy.port";	
 	public static final String SANDBOX = "-sandbox";

@@ -53,6 +53,7 @@ public class ApexManifestFileReader {
 		String[] manifestFiles = files.split(",");
 
 		for (String fileEntry : manifestFiles) {
+			LOG.info("current dir: " + new java.io.File( "." ).getCanonicalPath());
 			LOG.info("Reading Manifest file from location : " + fileEntry);
 			try (FileInputStream fStream = new FileInputStream(fileEntry)) {
 				apexClassesStrArrForManifest = readInputStreamAndConstructClassArray(fStream);

@@ -28,27 +28,27 @@ Please refer https://github.com/forcedotcom/ApexUnit/wiki to learn more about th
 This would create a local copy of the project for you.
 - (Optional) Open the project in an IDE (Eclipse, IntelliJ, etc.) 
 -  There are two ways you can select test classes to execute and select classes you wish to examine the code coverage of
-  - regex - identify and provide regex for the test class names that you want to execute in the "-regex.for.selecting.test.classes.to.execute" parameter. Example: if you want to execute the tests: My_Apex_controller_Test, My_Apex_builder_Test and My_Apex_validator_Test, identify the regex as "My_Apex_\*_Test". Pass the parameter "-regex.for.selecting.test.classes.to.execute My_Apex_\*_Test" in the mvn command.
-    - Similarly, you can provide regex for the classes for which you want to examine the code coverage of by using "-regex.for.selecting.source.classes.for.code.coverage.computation My_Apex_\*_Class" in the mvn command.
-  - Manifest files - Lists of tests can be read from Manifest files. Create a manifest file such as ManifestFile_Unit_Tests.txt in the "src/main/resources" directory of your project. Add test class names to execute in the manifest file. Specify this manifest file in the mvn command like "-manifest.files.with.test.class.names.to.execute ManifestFile_Unit_Tests.txt". 
-    - Similarly, add the class names for which you want to exercise code coverage in a manifest file such as ClasssManifestFile.txt in "src/main/resources" directory of your project and specify this manifest file in the mvn command like "-manifest.files.with.source.class.names.for.code.coverage.computation ClassManifestFile.txt". 
-  - Note that multiple regexes and manifest files can be specified using comma seperation(without spaces). Example: "-regex.for.selecting.test.classes.to.execute This_Is_Regex1\*,\*Few_Test,Another_\*_regex -manifest.files.with.source.class.names.for.code.coverage.computation ClassManifestFile.txt,MoreClassesManifestFile.txt"
+  - regex - identify and provide regex for the test class names that you want to execute in the "-regex.tests" parameter. Example: if you want to execute the tests: My_Apex_controller_Test, My_Apex_builder_Test and My_Apex_validator_Test, identify the regex as "My_Apex_\*_Test". Pass the parameter "-regex.tests My_Apex_\*_Test" in the mvn command.
+    - Similarly, you can provide regex for the classes for which you want to examine the code coverage of by using "-regex.classes My_Apex_\*_Class" in the mvn command.
+  - Manifest files - Lists of tests can be read from Manifest files. Create a manifest file such as ManifestFile_Unit_Tests.txt in the "src/main/resources" directory of your project. Add test class names to execute in the manifest file. Specify this manifest file in the mvn command like "-manifest.tests". 
+    - Similarly, add the class names for which you want to exercise code coverage in a manifest file such as ClasssManifestFile.txt in "src/main/resources" directory of your project and specify this manifest file in the mvn command like "-manifest.classes ClassManifestFile.txt". 
+  - Note that multiple regexes and manifest files can be specified using comma seperation(without spaces). Example: "-regex.tests This_Is_Regex1\*,\*Few_Test,Another_\*_regex -manifest.classes ClassManifestFile.txt,MoreClassesManifestFile.txt"
 - Go to your project directory (the directory containing pom.xml) in your commandline and execute the following command:
 ```java
 mvn compile exec:java -Dexec.mainClass="com.sforce.cd.apexUnit.ApexUnitRunner"
 -Dexec.args="-org.username $username 
 			 -org.password $password
 			 -sandbox $sandbox
-			 -org.wide.code.coverage.threshold $Org_Wide_Code_Coverage_Percentage_Threshold 
-			 -team.code.coverage.threshold $team_Code_Coverage_Percentage_Threshold 
-			 -regex.for.selecting.source.classes.for.code.coverage.computation 
+			 -threshold.org $Org_Wide_Code_Coverage_Percentage_Threshold 
+			 -threshold.team $team_Code_Coverage_Percentage_Threshold 
+			 -regex.classes 
 				   $regex_For_Apex_Classes_To_Compute_Code_Coverage 
-			 -regex.for.selecting.test.classes.to.execute $regex_For_Apex_Test_Classes_To_Execute 
-			 -manifest.files.with.test.class.names.to.execute   
+			 -regex.tests $regex_For_Apex_Test_Classes_To_Execute 
+			 -manifest.tests   
 				   $manifest_Files_For_Apex_Test_Classes_To_Execute 
-			 -manifest.files.with.source.class.names.for.code.coverage.computation 
+			 -manifest.classes 
 				   $manifest_Files_For_Apex_Source_Classes_to_compute_code_coverage
-			 -max.test.execution.time.threshold 
+			 -threshold.maxtime 
 				   $max_time_threshold_for_test_execution_to_abort"
 			 -proxy.host
 				   $prox_host
@@ -63,23 +63,23 @@ Required parameters:
 - -org.password  : Password corresponding to the username for the org
 
 Optional Parameters: 
-- -org.wide.code.coverage.threshold (default value: 75) : Org wide minimum code coverage required to meet the code coverage standards
-- -team.code.coverage.threshold (default value: 75) : Team wide minimum code coverage required to meet the code coverage standards
-- -regex.for.selecting.source.classes.for.code.coverage.computation : The source regex used by the team for the apex source classes. All classes beginning with this parameter in the org will be used to compute team code coverage
-- -regex.for.selecting.test.classes.to.execute  : The test regex used by the team for the apex test classes. All tests beginning with this parameter in the org will be selected to run
-- -manifest.files.with.test.class.names.to.execute : Manifest files containing the list of test classes to be executed
-- -manifest.files.with.source.class.names.for.code.coverage.computation : Manifest files containing the list of Apex classes for which code coverage is to be computed
-- -max.test.execution.time.threshold : Maximum execution time(in minutes) for a test before it gets aborted
+- -threshold.org (default value: 75) : Org wide minimum code coverage required to meet the code coverage standards
+- -threshold.team (default value: 75) : Team wide minimum code coverage required to meet the code coverage standards
+- -regex.classes : The source regex used by the team for the apex source classes. All classes beginning with this parameter in the org will be used to compute team code coverage
+- -regex.tests  : The test regex used by the team for the apex test classes. All tests beginning with this parameter in the org will be selected to run
+- -manifest.tests : Manifest files containing the list of test classes to be executed
+- -manifest.classes : Manifest files containing the list of Apex classes for which code coverage is to be computed
+- -maxtime : Maximum execution time(in minutes) for a test before it gets aborted
 - -proxy.host : Proxy host for external access
 - -proxy.port : Proxy port for external access
 - -sandbox : set to true to authenticate using test.salesforce.com, false if connecting to login.salesforce.com [default is false]
 - -help : Displays options available for running this application
 
-Note: You must provide either of the (-regex.for.selecting.source.classes.for.code.coverage.computation OR -manifest.files.with.source.class.names.for.code.coverage.computation) AND either of  -(regex.for.selecting.test.classes.to.execute OR -manifest.files.with.test.class.names.to.execute)
+Note: You must provide either of the (-regex.classes OR -manifest.classes) AND either of  -(regex.tests OR -manifest.tests)
 
 Sample command: 
 ```java
-mvn compile exec:java -Dexec.mainClass="com.sforce.cd.apexUnit.ApexUnitRunner" -Dexec.args=" -org.username yourusername@salesforce.com -org.password yourpassword-org.wide.code.coverage.threshold 75  -team.code.coverage.threshold 80 -regex.for.selecting.test.classes.to.execute your_regular_exp1_for_test_classes,your_regular_exp2_for_test_classes -regex.for.selecting.source.classes.for.code.coverage.computation your_regular_exp1_for_source_classes,your_regular_exp2_for_source_classes -manifest.files.with.test.class.names.to.execute ManifestFile.txt -manifest.files.with.source.class.names.for.code.coverage.computation ClassManifestFile.txt -max.test.execution.time.threshold 10 -proxy.host your.proxy-if-required.net -proxy.port 8080"
+mvn compile exec:java -Dexec.mainClass="com.sforce.cd.apexUnit.ApexUnitRunner" -Dexec.args=" -org.username yourusername@salesforce.com -org.password yourpassword -threshold.org 75  -threshold.team 80 -regex.tests your_regular_exp1_for_test_classes,your_regular_exp2_for_test_classes -regex.classes your_regular_exp1_for_source_classes,your_regular_exp2_for_source_classes -manifest.tests ManifestFile.txt -manifest.classes ClassManifestFile.txt -threshold.maxtime 10 -proxy.host your.proxy-if-required.net -proxy.port 8080"
 ```
 Note: Multiple comma separated manifest files and regexes can be provided. Please do not include spaces while providing multiple regex or manifest files.
 
