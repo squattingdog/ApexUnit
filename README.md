@@ -69,7 +69,7 @@ Optional Parameters:
 - -regex.tests  : The test regex used by the team for the apex test classes. All tests beginning with this parameter in the org will be selected to run
 - -manifest.tests : Manifest files containing the list of test classes to be executed
 - -manifest.classes : Manifest files containing the list of Apex classes for which code coverage is to be computed
-- -maxtime : Maximum execution time(in minutes) for a test before it gets aborted
+- -threshold.maxtime : Maximum execution time(in minutes) for a test before it gets aborted
 - -proxy.host : Proxy host for external access
 - -proxy.port : Proxy port for external access
 - -sandbox : set to true to authenticate using test.salesforce.com, false if connecting to login.salesforce.com [default is false]
