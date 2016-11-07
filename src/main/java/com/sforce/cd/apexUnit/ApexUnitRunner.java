@@ -39,6 +39,7 @@ import com.sforce.cd.apexUnit.report.ApexCodeCoverageReportGenerator;
 import com.sforce.cd.apexUnit.report.ApexReportBean;
 import com.sforce.cd.apexUnit.report.ApexUnitTestReportGenerator;
 import com.sforce.cd.apexUnit.report.ApexUnitCodeCoverageResults;
+import com.sforce.cd.apexUnit.report.ApexUnitMCReportGenerator;
 
 public class ApexUnitRunner {
 	private static Logger LOG = LoggerFactory.getLogger(ApexUnitRunner.class);
@@ -65,6 +66,12 @@ public class ApexUnitRunner {
 				&& !skipCodeCoverageComputation) {
 			ApexUnitUtils.shutDownWithErrMsg("Either of the source class manifest file or source class regex should be provided");
 		}
+		if(CommandLineArguments.getSendEmail() && (
+				CommandLineArguments.getMCUsername() == null || CommandLineArguments.getMCPassword() == null
+				|| CommandLineArguments.getMCSoapEndpoint() == null || CommandLineArguments.getEmailAddress() == null)){
+			ApexUnitUtils.shutDownWithErrMsg("When -mc.sendemail is true, -mc.emailaddress, -mc.username, -mc.password and -mc.soapendpoint parameters must be specified");
+		}
+		
 		// Invoke the FlowController.logicalFlow() that handles the entire
 		// logical flow of ApexUnit tool.
 		TestExecutor testExecutor = new TestExecutor();
@@ -104,12 +111,15 @@ public class ApexUnitRunner {
 		LOG.info("Total test methods executed: " + TestStatusPollerAndResultHandler.totalTestMethodsExecuted);
 		if (apexReportBeans != null && apexReportBeans.length > 0) {
 			String reportFile = "ApexUnitReport.xml";
-			ApexUnitTestReportGenerator.generateTestReport(apexReportBeans, reportFile);
+			ApexUnitTestReportGenerator.generateTestReport(apexReportBeans, reportFile);			
 		} else {
 			ApexUnitUtils.shutDownWithErrMsg("Unable to generate test report. "
 											 + "Did not find any test results for the job id");
 		}
 		if (!skipCodeCoverageComputation) {
+			if(CommandLineArguments.getSendEmail()) {
+				ApexUnitMCReportGenerator.sendTestResults(apexClassCodeCoverageBeans);
+			}
 			ApexCodeCoverageReportGenerator.generateHTMLReport(apexClassCodeCoverageBeans);
 
 			// validating the code coverage metrics against the thresholds

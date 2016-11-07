@@ -23,11 +23,13 @@ public class ApexClassCodeCoverageBean implements Comparable<ApexClassCodeCovera
 	private String apexClassName;
 	private int numLinesCovered = 0;
 	private int numLinesUncovered = 0;
+	private double totalLines = -1;
 	private ApexMethodCodeCoverageBean[] testMethodNames;
 	private String apiVersion;
 	private String lengthWithoutComments;
 	private List<Long> coveredLinesList;
 	private List<Long> uncoveredLinesList;
+	
 
 	public List<Long> getCoveredLinesList() {
 		return coveredLinesList;
@@ -108,9 +110,15 @@ public class ApexClassCodeCoverageBean implements Comparable<ApexClassCodeCovera
 	public void setLengthWithoutComments(String lengthWithoutComments) {
 		this.lengthWithoutComments = lengthWithoutComments;
 	}
+	
+	public double getTotalLines() {
+		if(this.totalLines == -1)
+			this.totalLines = this.numLinesCovered + numLinesUncovered;
+		return this.totalLines;
+	}
 
 	public double getCoveragePercentage() {
-		double totalLines = numLinesCovered + numLinesUncovered;
+		double totalLines = this.getTotalLines();
 		if (totalLines > 0) {
 			return (numLinesCovered / (totalLines)) * 100.0;
 		} else {
@@ -123,15 +131,20 @@ public class ApexClassCodeCoverageBean implements Comparable<ApexClassCodeCovera
 	 * 
 	 * (non-Javadoc)
 	 * 
+	 * added sorting by ApexClassName after sorting by percentage.
+	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	public int compareTo(ApexClassCodeCoverageBean codeCoverageBean) {
+		int ret;
 		if (this.getCoveragePercentage() < codeCoverageBean.getCoveragePercentage()) {
-			return -1;
+			ret = -1;
 		} else if (this.getCoveragePercentage() > codeCoverageBean.getCoveragePercentage()) {
-			return 1;
+			ret = 1;
 		} else {
-			return 0;
+			ret = this.getApexClassName().compareTo(codeCoverageBean.getApexClassName());
 		}
+		
+		return ret;
 	}
 }

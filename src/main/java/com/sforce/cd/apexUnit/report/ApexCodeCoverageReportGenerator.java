@@ -86,12 +86,7 @@ public class ApexCodeCoverageReportGenerator {
 		StringBuilder apexTestExecutionSummary = new StringBuilder();
 		appendTag(apexTestExecutionSummary, "header", "Test Execution Summary: ");
 		appendLineSpaces(apexTestExecutionSummary, 2);
-		int failureTestMethodsCount = 0;
-		if (TestStatusPollerAndResultHandler.testFailures) {
-			if (TestStatusPollerAndResultHandler.failedTestMethods != null
-					&& !TestStatusPollerAndResultHandler.failedTestMethods.isEmpty())
-				failureTestMethodsCount = TestStatusPollerAndResultHandler.failedTestMethods.size();
-		}
+		int failureTestMethodsCount = TestStatusPollerAndResultHandler.getNumOfFailedTestMethods();
 		StringBuffer apexTestExecutionSummaryString = new StringBuffer(
 				" Total test classes executed: " + TestStatusPollerAndResultHandler.totalTestClasses);
 		if (TestStatusPollerAndResultHandler.totalTestClassesAborted > 0) {
@@ -101,7 +96,7 @@ public class ApexCodeCoverageReportGenerator {
 		apexTestExecutionSummaryString.append(
 				"<br/> Total test methods executed: " + TestStatusPollerAndResultHandler.totalTestMethodsExecuted);
 		apexTestExecutionSummaryString.append("<br/> Test method pass count: "
-				+ (TestStatusPollerAndResultHandler.totalTestMethodsExecuted - failureTestMethodsCount));
+				+ (TestStatusPollerAndResultHandler.getNumOfPassedTestMethods()));
 		apexTestExecutionSummaryString.append("<br/> Test method fail count: " + failureTestMethodsCount);
 
 		appendTag(apexTestExecutionSummary, "summary", apexTestExecutionSummaryString.toString());

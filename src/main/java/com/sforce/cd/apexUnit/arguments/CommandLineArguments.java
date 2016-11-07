@@ -33,7 +33,16 @@ public class CommandLineArguments {
 	public static final String TEAM_CODE_COVERAGE_THRESHOLD = "-threshold.team";
 	public static final String MAX_TEST_EXECUTION_TIME_THRESHOLD = "-threshold.maxtime";
 	public static final String PROXY_HOST = "-proxy.host";
-	public static final String PROXY_PORT = "-proxy.port";	
+	public static final String PROXY_PORT = "-proxy.port";
+	public static final String MC_SEND_EMAIL = "-mc.sendemail";
+	public static final String MC_SOAP_ENDPOINT = "-mc.soapendpoint";
+	public static final String MC_USERNAME = "-mc.username";
+	public static final String MC_PASSWORD = "-mc.password";
+	public static final String EMAIL_ADDRESS = "-mc.emailaddress";
+	public static final String TEAM_NAME = "-mc.teamname";
+	public static final String JENKINS_JOBNAME = "-jenkins.jobname";
+	public static final String JENKINS_BUILD_NUMBER = "-jenkins.build.number";
+	public static final String JENKINS_BUILD_URL = "-jenkins.build.url";
 	public static final String SANDBOX = "-sandbox";
 	
 	public static final String HELP = "-help";
@@ -66,10 +75,28 @@ public class CommandLineArguments {
 	static private String proxyHost;
 	@Parameter(names = PROXY_PORT, description = "Proxy port if required for access.", validateWith = PositiveIntegerValidator.class, required = false)
 	static private Integer proxyPort;
+	@Parameter(names = MC_SEND_EMAIL, description = "Default is false.  Used to trigger test results email through marketing cloud.", required = false)
+	static private boolean sendEmail = false;
+	@Parameter(names = MC_SOAP_ENDPOINT, description = "The endpoint to use to connect to Marketing Cloud SOAP API.  Required if sendemail is set to true.", variableArity = true)
+	static private String mcSoapEndpoint;
+	@Parameter(names = MC_USERNAME, description = "The clientId to use to connect to Marketing Cloud.  Required if sendemail is set to true.", variableArity = true)
+	static private String mcUsername;
+	@Parameter(names = MC_PASSWORD, description = "The client secret to use to connect to Marketing Cloud.  Required if sendemail is set to true.", variableArity = true)
+	static private String mcPassword;
+	@Parameter(names = EMAIL_ADDRESS, description = "The email address to which the results will be sent from Marketing Cloud.", required = false, variableArity = true)
+	static private String emailAddress;
+	@Parameter(names = TEAM_NAME, description = "The unique identifier of the email to send from the Marketing Cloud.", required = false, variableArity = true)
+	static private String teamName;
+	@Parameter(names = JENKINS_JOBNAME, description = "The name of the jenkins job that triggered this test.", required = false, variableArity = true)
+	static private String jenkinsJobName;
+	@Parameter(names = JENKINS_BUILD_NUMBER, description = "The build number of the jenkins job that triggered this test.", required = false)
+	static private Integer jenkinsBuildNumber;
+	@Parameter(names = JENKINS_BUILD_URL, description = "The build url of the jenkins job where the results can be viewed.", required = false, variableArity = true)
+	static private String jenkinsBuildUrl;
 	@Parameter(names = HELP, help = true, description = "Displays options available for running this application")
 	static private boolean help;
 	@Parameter(names = SANDBOX, description = "Default is false.  Used to determine login endpoint for authentication.", required = false)
-	static private String sandbox = "";
+	static private Boolean sandbox = false;
 
 	/*
 	 * Static getter methods for each of the CLI parameter
@@ -123,8 +150,44 @@ public class CommandLineArguments {
 		return proxyPort;
 	}
 	
+	public static boolean getSendEmail() {
+		return sendEmail;
+	}
+	
+	public static String getMCSoapEndpoint(){
+		return mcSoapEndpoint;
+	}
+	
+	public static String getMCUsername() {
+		return mcUsername;
+	}
+	
+	public static String getMCPassword() {
+		return mcPassword;
+	}
+	
+	public static String getEmailAddress() {
+		return emailAddress;
+	}
+	
+	public static String getTeamName() {
+		return teamName;
+	}
+	
+	public static String getJenkinsJobName(){
+		return jenkinsJobName;
+	}
+	
+	public static Integer getJenkinsBuildNumber() {
+		return jenkinsBuildNumber;
+	}
+	
+	public static String getJenkinsBuildUrl(){
+		return jenkinsBuildUrl;
+	}
+	
 	public static boolean isSandbox() {
-		return BooleanUtils.toBoolean(sandbox);
+		return sandbox;
 	}
 	
 	public static boolean isHelp() {

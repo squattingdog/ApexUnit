@@ -41,6 +41,7 @@ public class TestStatusPollerAndResultHandler {
 	public static int totalTestClassesAborted = 0;
 	public static List<String> failedTestMethods = new ArrayList<String>();
 
+	private static int totalTestMethodsFailed = -1;
 	private static Logger LOG = LoggerFactory.getLogger(TestStatusPollerAndResultHandler.class);
 
 	public ApexReportBean[] fetchResultsFromParentJobId(String parentJobId, PartnerConnection conn) {
@@ -283,6 +284,24 @@ public class TestStatusPollerAndResultHandler {
 		}
 		return testsCompleted;
 
+	}
+	public static int getNumOfFailedTestMethods() {
+		if(totalTestMethodsFailed == -1) {
+			if (TestStatusPollerAndResultHandler.testFailures) {
+				if (TestStatusPollerAndResultHandler.failedTestMethods != null
+						&& !TestStatusPollerAndResultHandler.failedTestMethods.isEmpty())
+					totalTestMethodsFailed = TestStatusPollerAndResultHandler.failedTestMethods.size();
+				else
+					totalTestMethodsFailed = 0;
+			} else {
+				totalTestMethodsFailed = 0;
+			}
+		}
+		return totalTestMethodsFailed;
+	}
+	
+	public static int getNumOfPassedTestMethods() {
+		return totalTestMethodsExecuted - getNumOfFailedTestMethods();
 	}
 
 }

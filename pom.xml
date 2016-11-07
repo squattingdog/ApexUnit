@@ -12,7 +12,7 @@
 
 	<groupId>com.sforce.cd.ApexUnit</groupId>
 	<artifactId>ApexUnit-core</artifactId>
-	<version>2.3.6</version>
+	<version>3.0.0</version>
 	<name>ApexUnit</name>
 	<description>Apex Unit v 2.0 with enhanced metrics and advanced features</description>
 	<!-- Fail fast for older Maven versions -->
@@ -72,6 +72,11 @@
 					<artifactId>cobertura-maven-plugin</artifactId>
 					<version>2.5.1</version>
 				</plugin>
+				<plugin>
+		          <groupId>org.apache.maven.plugins</groupId>
+		          <artifactId>maven-shade-plugin</artifactId>
+		          <version>2.3</version>
+		        </plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -86,17 +91,33 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<filters>
+			                    <filter>
+			                        <!-- filter out signature files from signed dependencies, else repackaging fails with security ex -->
+			                        <artifact>*:*</artifact>
+			                        <excludes>
+			                            <exclude>META-INF/*.SF</exclude>
+			                            <exclude>META-INF/*.DSA</exclude>
+			                            <exclude>META-INF/*.RSA</exclude>
+			                            <exclude>META-INF/*.EC</exclude>
+			                        </excludes>
+			                    </filter>
+			                </filters>		
+							<createDependencyReducedPom>false</createDependencyReducedPom>							
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>com.sforce.cd.apexUnit.ApexUnitRunner</mainClass>
 								</transformer>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
-									<resource>.txt</resource>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>META-INF/cxf/bus-extensions.txt</resource>
 								</transformer>
-							</transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+									<resource>META-INF/DEPENDENCIES</resource>
+									<file>target/classes/META-INF/DEPENDENCIES</file> 
+								</transformer>
+							</transformers>											 
 						</configuration>
 					</execution>
 				</executions>
@@ -128,6 +149,15 @@
 				<artifactId>license-maven-plugin</artifactId>
 				<version>1.8</version>
 			</plugin>
+			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-compiler-plugin</artifactId>
+		        <version>3.2</version>
+		        <configuration>
+		            <source>1.8</source>
+		            <target>1.8</target>
+		        </configuration>
+		    </plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -187,6 +217,14 @@
 			<artifactId>json-simple</artifactId>
 			<version>1.1</version>
 		</dependency>
-
+		<dependency>
+		  <groupId>com.exacttarget</groupId>
+		  <artifactId>fuelsdk</artifactId>
+		  <version>1.1.0</version>
+		</dependency>
 	</dependencies>
+	<properties>
+		<maven.tests.skip>true</maven.tests.skip>
+		<maven.javadoc.skip>true</maven.javadoc.skip>
+	</properties>
 </project>

@@ -36,7 +36,6 @@ import com.sforce.cd.apexUnit.client.utils.ApexClassFetcherUtils;
 import com.sforce.cd.apexUnit.report.ApexReportBean;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SaveResult;
-import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
 public class AsyncBulkApiHandlerTest {
